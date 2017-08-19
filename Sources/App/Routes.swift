@@ -3,6 +3,7 @@ import MySQLProvider
 
 extension Droplet {
     func setupRoutes() throws {
+        /*
         get("hello") { req in
             var json = JSON()
             try json.set("hello", "world")
@@ -36,12 +37,15 @@ extension Droplet {
             let result = try mysqlDriver.raw("select * from users where username='" + (name?.string)! + "';")
             let userinfo = result[0]
             return try JSON(node: [
-                    "data":userinfo ?? nil,
+                    "data":userinfo ?? nil ?? "",
                     "state":1,
                     "msg":"请求成功"
                 ])
         }
-        
+ */
+        get("test"){ req in
+            return "Hello Developer"
+        }
         try resource("posts", PostController.self)
     }
 }
