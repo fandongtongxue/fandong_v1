@@ -6,35 +6,32 @@ extension Droplet {
         //1.用户相关
         //1.1注册用户
         get("registerUser"){ req in
-            //没有用户名
+            //获取用户名和密码
             let username = req.data["username"]
-            if username == nil{
-                return try JSON(node: [
-                    "data":"",
-                    "msg" : "用户名为空",
-                    "state":0
-                    ])
-            }
-            //没有密码
             let password = req.data["password"]
-            if password == nil{
-                return try JSON(node: [
-                    "data":"",
-                    "msg" : "密码为空",
-                    "state":0
-                    ])
-            }
             //创建MySQL驱动
             let mysqlDriver = try self.mysql()
             //查询是否已存在此用户
             let result = try mysqlDriver.raw("select * from app_user where username='" + (username?.string)! + "';")
-            let userinfo = result[0]
-            if userinfo != nil{
+            if result[0] != nil{
                 return try JSON(node: [
                     "data":"",
                     "msg" : "用户已存在,请直接登录",
                     "state":0
                     ])
+            }else{
+                //用户写入数据库
+                let insertMysqlStr = String.init(format: "INSERT INTO app_user(id,username,password) VALUES(1,'%@','%@');", (username?.string)!,(password?.string)!)
+                let insertResult = try mysqlDriver.raw(insertMysqlStr)
+                let excuteResult = try mysqlDriver.raw("select * from app_user where username='" + (username?.string)! + "';")
+                let userinfo = excuteResult[0]
+                if userinfo != nil{
+                    return try JSON(node: [
+                        "data":"",
+                        "msg" : "注册失败",
+                        "state":0
+                        ])
+                }
             }
             return "注册用户"
         }
