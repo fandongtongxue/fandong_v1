@@ -23,7 +23,6 @@ extension Droplet {
                 //用户写入数据库
                 let insertMysqlStr = String.init(format: "INSERT INTO app_user(uid,userName,passWord) VALUES(0,'%@','%@');", (username?.string)!,(password?.string)!)
                 let insertResult = try mysqlDriver.raw(insertMysqlStr)
-                print("注册用户结果:"+insertResult.string!)
                 let excuteResult = try mysqlDriver.raw("select * from app_user where userName='" + (username?.string)! + "';")
                 let userinfo = excuteResult[0]
                 if userinfo == nil{
