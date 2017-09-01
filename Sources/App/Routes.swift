@@ -7,12 +7,26 @@ extension Droplet {
         //1.1注册用户
         get("userRegister"){ req in
             //获取用户名和密码
-            let username = req.data["userName"]
-            let password = req.data["passWord"]
+            let userName = req.data["userName"]
+            let passWord = req.data["passWord"]
+            if userName == nil{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "用户名为空",
+                    "state":0
+                    ])
+            }
+            if passWord == nil{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "密码为空",
+                    "state":0
+                    ])
+            }
             //创建MySQL驱动
             let mysqlDriver = try self.mysql()
             //查询是否已存在此用户
-            let result = try mysqlDriver.raw("select * from app_user where userName='" + (username?.string)! + "';")
+            let result = try mysqlDriver.raw("select * from app_user where userName='" + (userName?.string)! + "';")
             if result[0] != nil{
                 return try JSON(node: [
                     "data":"",
@@ -21,9 +35,9 @@ extension Droplet {
                     ])
             }else{
                 //用户写入数据库
-                let insertMysqlStr = "INSERT INTO app_user(uid,userName,passWord) VALUES(0,'" + (username?.string)! + "','" +  (password?.string)! + "');"
+                let insertMysqlStr = "INSERT INTO app_user(uid,userName,passWord) VALUES(0,'" + (userName?.string)! + "','" +  (passWord?.string)! + "');"
                 try mysqlDriver.raw(insertMysqlStr)
-                let excuteResult = try mysqlDriver.raw("select * from app_user where userName='" + (username?.string)! + "';")
+                let excuteResult = try mysqlDriver.raw("select * from app_user where userName='" + (userName?.string)! + "';")
                 let userinfo = excuteResult[0]
                 if userinfo != nil{
                     return try JSON(node: [
@@ -43,12 +57,12 @@ extension Droplet {
         //1.2用户登录
         get("userLogin"){ req in
             //获取用户名和密码
-            let username = req.data["userName"]
+            let userName = req.data["userName"]
 //            let password = req.data["passWord"]
             //创建MySQL驱动
             let mysqlDriver = try self.mysql()
             //查询是否已存在此用户
-            let result = try mysqlDriver.raw("select * from app_user where userName='" + (username?.string)! + "';")
+            let result = try mysqlDriver.raw("select * from app_user where userName='" + (userName?.string)! + "';")
             if result[0] != nil{
                 //判断密码是否正确
                 return try JSON(node: [
