@@ -51,7 +51,11 @@ extension Droplet {
             let result = try mysqlDriver.raw("select * from app_user where userName='" + (username?.string)! + "';")
             if result[0] != nil{
                 //判断密码是否正确
-                return "需要判断密码是否正确"
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "TODO还需要密码验证",
+                    "state":0
+                    ])
             }
             return try JSON(node: [
                 "data":"",
