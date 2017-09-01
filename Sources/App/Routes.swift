@@ -44,7 +44,7 @@ extension Droplet {
         get("userLogin"){ req in
             //获取用户名和密码
             let username = req.data["userName"]
-            let password = req.data["passWord"]
+//            let password = req.data["passWord"]
             //创建MySQL驱动
             let mysqlDriver = try self.mysql()
             //查询是否已存在此用户
