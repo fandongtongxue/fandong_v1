@@ -58,11 +58,18 @@ extension Droplet {
         get("userLogin"){ req in
             //获取用户名和密码
             let userName = req.data["userName"]
-//            let password = req.data["passWord"]
+            let passWord = req.data["passWord"]
             if userName == nil{
                 return try JSON(node: [
                     "data":"",
                     "msg" : "用户名为空",
+                    "state":0
+                    ])
+            }
+            if passWord == nil{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "密码为空",
                     "state":0
                     ])
             }
@@ -72,9 +79,30 @@ extension Droplet {
             let result = try mysqlDriver.raw("select * from app_user where userName='" + (userName?.string)! + "';")
             if result[0] != nil{
                 //判断密码是否正确
+                //创建Drop
+                let config = try Config()
+                try config.setup()
+                let drop = try Droplet(config)
+                //GET中的密码哈希值
+                let getPassWordHash = try drop.hash.make((passWord?.string)!)
+                let getPassWordHashStr = getPassWordHash.makeString()
+                //MySQL中密码的哈希值
+                let resultNode = result[0] as! Node
+                let resultStructuredData = resultNode.wrapped as! StructuredData
+                let mysqlPasswordStr = (resultStructuredData["passWord"]?.string)!
+                let mysqlPasswordHash = try drop.hash.make(mysqlPasswordStr)
+                let mysqlPasswordHashStr = mysqlPasswordHash.makeString()
+                //密码验证
+                if getPassWordHashStr == mysqlPasswordHashStr {
+                    return try JSON(node: [
+                        "data":"",
+                        "msg" : "登录成功",
+                        "state":1
+                        ])
+                }
                 return try JSON(node: [
                     "data":"",
-                    "msg" : "TODO还需要密码验证",
+                    "msg" : "密码错误",
                     "state":0
                     ])
             }
