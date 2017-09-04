@@ -9,14 +9,14 @@ extension Droplet {
             //获取用户名和密码
             let userName = req.data["userName"]
             let passWord = req.data["passWord"]
-            if userName == nil{
+            if userName == nil || userName == ""{
                 return try JSON(node: [
                     "data":"",
                     "msg" : "用户名为空",
                     "state":0
                     ])
             }
-            if passWord == nil{
+            if passWord == nil || passWord == ""{
                 return try JSON(node: [
                     "data":"",
                     "msg" : "密码为空",
@@ -59,14 +59,14 @@ extension Droplet {
             //获取用户名和密码
             let userName = req.data["userName"]
             let passWord = req.data["passWord"]
-            if userName == nil{
+            if userName == nil || userName == ""{
                 return try JSON(node: [
                     "data":"",
                     "msg" : "用户名为空",
                     "state":0
                     ])
             }
-            if passWord == nil{
+            if passWord == nil || passWord == ""{
                 return try JSON(node: [
                     "data":"",
                     "msg" : "密码为空",
@@ -87,8 +87,8 @@ extension Droplet {
                 let getPassWordHash = try drop.hash.make((passWord?.string)!)
                 let getPassWordHashStr = getPassWordHash.makeString()
                 //MySQL中密码的哈希值
-                let resultNode = result[0] as! Node
-                let resultStructuredData = resultNode.wrapped as! StructuredData
+                let resultNode = result[0]!
+                let resultStructuredData = resultNode.wrapped 
                 let mysqlPasswordStr = (resultStructuredData["passWord"]?.string)!
                 let mysqlPasswordHash = try drop.hash.make(mysqlPasswordStr)
                 let mysqlPasswordHashStr = mysqlPasswordHash.makeString()
