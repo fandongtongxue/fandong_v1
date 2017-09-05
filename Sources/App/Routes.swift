@@ -47,12 +47,14 @@ extension Droplet {
                     //写入用户信息表
                     let insertMysqlUserInfoStr = "INSERT INTO app_userInfo(id,uid,icon,nickName,introduce) VALUES(0,'" + (userinfo?.wrapped["uid"]?.string)!+"','"+USER_DEFAULT_ICON+"','"+(userName?.string)!+"','"+USER_DEFAULT_INTRODUCE+"');"
                     try mysqlDriver.raw(insertMysqlUserInfoStr)
-                    return try JSON(node: [
-                        "data":"",
-                        "msg" : "注册成功",
-                        "state":1
-                        ])
-                    
+                    let checkUserInfoResult = try mysqlDriver.raw("select * from app_userInfo where uid='" + (userinfo?.wrapped["uid"]?.string)! + "';")
+                    if checkUserInfoResult[0] != nil{
+                        return try JSON(node: [
+                            "data":["uid":(userinfo?.wrapped["uid"]?.string)!],
+                            "msg" : "注册成功",
+                            "state":1
+                            ])
+                    }
                 }
                 return try JSON(node: [
                     "data":"",
@@ -101,11 +103,14 @@ extension Droplet {
                 let mysqlPasswordHashStr = mysqlPasswordHash.makeString()
                 //密码验证
                 if getPassWordHashStr == mysqlPasswordHashStr {
-                    return try JSON(node: [
-                        "data":"",
-                        "msg" : "登录成功",
-                        "state":1
-                        ])
+                    let checkUserInfoResult = try mysqlDriver.raw("select * from app_userInfo where uid='" + (result[0]?.wrapped["uid"]?.string)! + "';")
+                    if checkUserInfoResult[0] != nil{
+                        return try JSON(node: [
+                            "data":["uid":(result[0]?.wrapped["uid"]?.string)!],
+                            "msg" : "登录成功",
+                            "state":1
+                            ])
+                    }
                 }
                 return try JSON(node: [
                     "data":"",
