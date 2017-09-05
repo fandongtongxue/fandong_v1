@@ -213,7 +213,7 @@ extension Droplet {
             }
             return try JSON(node: [
                 "data":"",
-                "msg" : "获取用户信息失败",
+                "msg" : "用户不存在,请先注册",
                 "state":0
                 ])
         }
