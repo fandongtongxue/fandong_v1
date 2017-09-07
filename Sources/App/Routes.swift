@@ -17,14 +17,14 @@ extension Droplet {
                 return try JSON(node: [
                     "data":"",
                     "msg" : "用户名为空",
-                    "state":0
+                    "status":0
                     ])
             }
             if passWord == nil || passWord == ""{
                 return try JSON(node: [
                     "data":"",
                     "msg" : "密码为空",
-                    "state":0
+                    "status":0
                     ])
             }
             //创建MySQL驱动
@@ -35,7 +35,7 @@ extension Droplet {
                 return try JSON(node: [
                     "data":"",
                     "msg" : "用户已存在,请直接登录",
-                    "state":0
+                    "status":0
                     ])
             }else{
                 //用户写入数据库
@@ -52,14 +52,14 @@ extension Droplet {
                         return try JSON(node: [
                             "data":["uid":(userinfo?.wrapped["uid"]?.string)!],
                             "msg" : "注册成功",
-                            "state":1
+                            "status":1
                             ])
                     }
                 }
                 return try JSON(node: [
                     "data":"",
                     "msg" : "注册失败",
-                    "state":0
+                    "status":0
                     ])
             }
         }
@@ -72,14 +72,14 @@ extension Droplet {
                 return try JSON(node: [
                     "data":"",
                     "msg" : "用户名为空",
-                    "state":0
+                    "status":0
                     ])
             }
             if passWord == nil || passWord == ""{
                 return try JSON(node: [
                     "data":"",
                     "msg" : "密码为空",
-                    "state":0
+                    "status":0
                     ])
             }
             //创建MySQL驱动
@@ -108,20 +108,20 @@ extension Droplet {
                         return try JSON(node: [
                             "data":["uid":(result[0]?.wrapped["uid"]?.string)!],
                             "msg" : "登录成功",
-                            "state":1
+                            "status":1
                             ])
                     }
                 }
                 return try JSON(node: [
                     "data":"",
                     "msg" : "密码错误",
-                    "state":0
+                    "status":0
                     ])
             }
             return try JSON(node: [
                 "data":"",
                 "msg" : "用户不存在,请先注册",
-                "state":0
+                "status":0
                 ])
         }
         //1.3已知密码修改密码
@@ -134,21 +134,21 @@ extension Droplet {
                 return try JSON(node: [
                     "data":"",
                     "msg" : "用户名为空",
-                    "state":0
+                    "status":0
                     ])
             }
             if oldPassWord == nil || oldPassWord == ""{
                 return try JSON(node: [
                     "data":"",
                     "msg" : "原密码为空",
-                    "state":0
+                    "status":0
                     ])
             }
             if newPassWord == nil || newPassWord == ""{
                 return try JSON(node: [
                     "data":"",
                     "msg" : "新密码为空",
-                    "state":0
+                    "status":0
                     ])
             }
             //判断原密码是否正确
@@ -176,7 +176,7 @@ extension Droplet {
                     return try JSON(node: [
                         "data":"",
                         "msg" : "原密码错误",
-                        "state":0
+                        "status":0
                         ])
                 }
                 //覆盖原密码
@@ -185,14 +185,14 @@ extension Droplet {
                 return try JSON(node: [
                     "data":"",
                     "msg" : "修改密码成功",
-                    "state":1
+                    "status":1
                     ])
             }
             //正确的话覆盖原密码
             return try JSON(node: [
                 "data":"",
                 "msg" : "用户不存在,请先注册",
-                "state":0
+                "status":0
                 ])
         }
         //1.4获取用户信息
@@ -202,7 +202,7 @@ extension Droplet {
                 return try JSON(node: [
                     "data":"",
                     "msg" : "uid为空",
-                    "state":0
+                    "status":0
                     ])
             }
             //创建MySQL驱动
@@ -213,13 +213,13 @@ extension Droplet {
                 return try JSON(node: [
                     "data":["userInfo":JSON(result)],
                     "msg" : "获取用户信息成功",
-                    "state":1
+                    "status":1
                     ])
             }
             return try JSON(node: [
                 "data":"",
                 "msg" : "用户不存在,请先注册",
-                "state":0
+                "status":0
                 ])
         }
         //1.5更改用户信息昵称/简介
@@ -232,21 +232,21 @@ extension Droplet {
                 return try JSON(node: [
                     "data":"",
                     "msg" : "uid为空",
-                    "state":0
+                    "status":0
                     ])
             }
             if nickName == nil || nickName == ""{
                 return try JSON(node: [
                     "data":"",
                     "msg" : "nickName为空",
-                    "state":0
+                    "status":0
                     ])
             }
             if introduce == nil || introduce == ""{
                 return try JSON(node: [
                     "data":"",
                     "msg" : "introduce为空",
-                    "state":0
+                    "status":0
                     ])
             }
             //创建MySQL驱动
@@ -256,7 +256,7 @@ extension Droplet {
             return try JSON(node: [
                 "data":"",
                 "msg" : "更新用户信息成功",
-                "state":1
+                "status":1
                 ])
         }
     }
