@@ -222,5 +222,42 @@ extension Droplet {
                 "state":0
                 ])
         }
+        //1.5更改用户信息昵称/简介
+        get("userChangeUserInfo"){ req in
+            //获取GET数据
+            let nickName = req.data["nickName"]
+            let introduce = req.data["introduce"]
+            let uid = req.data["uid"];
+            if uid == nil || uid == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "uid为空",
+                    "state":0
+                    ])
+            }
+            if nickName == nil || nickName == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "nickName为空",
+                    "state":0
+                    ])
+            }
+            if introduce == nil || introduce == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "introduce为空",
+                    "state":0
+                    ])
+            }
+            //创建MySQL驱动
+            let mysqlDriver = try self.mysql()
+            let updateMysqlStr = "UPDATE app_userInfo SET nickName = '" + (nickName?.string)! + "', introduce = '" + (introduce?.string)! + "' WHERE uid = '" + (uid?.string)! + "';"
+            try mysqlDriver.raw(updateMysqlStr)
+            return try JSON(node: [
+                "data":"",
+                "msg" : "更新用户信息成功",
+                "state":1
+                ])
+        }
     }
 }
