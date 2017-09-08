@@ -222,11 +222,12 @@ extension Droplet {
                 "status":0
                 ])
         }
-        //1.5更改用户信息昵称/简介
+        //1.5更改用户信息昵称/简介/头像
         get("userChangeUserInfo"){ req in
             //获取GET数据
             let nickName = req.data["nickName"]
             let introduce = req.data["introduce"]
+            let icon = req.data["icon"]
             let uid = req.data["uid"];
             if uid == nil || uid == ""{
                 return try JSON(node: [
@@ -249,9 +250,16 @@ extension Droplet {
                     "status":0
                     ])
             }
+            if icon == nil || icon == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "icon为空",
+                    "status":0
+                    ])
+            }
             //创建MySQL驱动
             let mysqlDriver = try self.mysql()
-            let updateMysqlStr = "UPDATE app_userInfo SET nickName = '" + (nickName?.string)! + "', introduce = '" + (introduce?.string)! + "' WHERE uid = '" + (uid?.string)! + "';"
+            let updateMysqlStr = "UPDATE app_userInfo SET nickName = '" + (nickName?.string)! + "', introduce = '" + (introduce?.string)! + "',icon = '" + (icon?.string)! +  "' WHERE uid = '" + (uid?.string)! + "';"
             try mysqlDriver.raw(updateMysqlStr)
             return try JSON(node: [
                 "data":"",
