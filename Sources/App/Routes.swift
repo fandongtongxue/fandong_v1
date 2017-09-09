@@ -274,7 +274,7 @@ extension Droplet {
             let mysqlDriver = try self.mysql()
             let result = try mysqlDriver.raw("select * from app_channelList;")
             return try JSON(node: [
-                "data":JSON(result),
+                "data":["channelList":JSON(result)],
                 "msg" : "获取电视台列表成功",
                 "status":1
                 ])
