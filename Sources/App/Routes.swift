@@ -267,5 +267,17 @@ extension Droplet {
                 "status":1
                 ])
         }
+        //2.电视台
+        //2.1电视台列表
+        get("channelList"){ req in
+            //创建MySQL驱动
+            let mysqlDriver = try self.mysql()
+            let result = try mysqlDriver.raw("select * from app_channelList;")
+            return try JSON(node: [
+                "data":JSON(result),
+                "msg" : "获取电视台列表成功",
+                "status":1
+                ])
+        }
     }
 }
