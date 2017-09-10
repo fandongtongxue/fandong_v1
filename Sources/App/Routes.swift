@@ -9,7 +9,7 @@ extension Droplet {
     func setupRoutes() throws {
         //1.用户相关
         //1.1注册用户
-        get("userRegister"){ req in
+        post("userRegister"){ req in
             //获取用户名和密码
             let userName = req.data["userName"]
             let passWord = req.data["passWord"]
@@ -64,7 +64,7 @@ extension Droplet {
             }
         }
         //1.2用户登录
-        get("userLogin"){ req in
+        post("userLogin"){ req in
             //获取用户名和密码
             let userName = req.data["userName"]
             let passWord = req.data["passWord"]
@@ -125,7 +125,7 @@ extension Droplet {
                 ])
         }
         //1.3已知密码修改密码
-        get("userChangePassWord"){ req in
+        post("userChangePassWord"){ req in
             //获取GET数据
             let userName = req.data["userName"]
             let oldPassWord = req.data["oldPassWord"]
@@ -223,7 +223,7 @@ extension Droplet {
                 ])
         }
         //1.5更改用户信息昵称/简介/头像
-        get("userChangeUserInfo"){ req in
+        post("userChangeUserInfo"){ req in
             //获取GET数据
             let nickName = req.data["nickName"]
             let introduce = req.data["introduce"]
