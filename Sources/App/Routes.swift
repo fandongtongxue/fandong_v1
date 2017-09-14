@@ -279,5 +279,14 @@ extension Droplet {
                 "status":1
                 ])
         }
+        //3.HTML
+        //3.1
+        get("index"){ req in
+            //创建Drop
+            let config = try Config()
+            try config.setup()
+            let drop = try Droplet(config)
+            return try drop.view.make("index.leaf", ["greeting": "¸"])
+        }
     }
 }
