@@ -288,5 +288,14 @@ extension Droplet {
             let drop = try Droplet(config)
             return try drop.view.make("index.leaf", ["greeting": "Hello World"])
         }
+        //4.上传
+        //4.1上传图片
+        post("userChangeUserIcon"){ req in
+            return try JSON(node: [
+                "data":"",
+                "msg" : "头像更新成功",
+                "status":1
+                ])
+        }
     }
 }
