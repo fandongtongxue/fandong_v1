@@ -300,10 +300,10 @@ extension Droplet {
                     "status":0
                     ])
             }
-            if bytes == nil || bytes == ""{
+            if bytes == nil{
                 return try JSON(node: [
                     "data":"",
-                    "msg" : "用户图像数据为空",
+                    "msg" : "用户头像二进制数据为空",
                     "status":0
                     ])
             }
