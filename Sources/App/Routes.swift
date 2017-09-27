@@ -291,6 +291,22 @@ extension Droplet {
         //4.上传
         //4.1上传图片
         post("userChangeUserIcon"){ req in
+            let bytes = req.body.bytes
+            let uid = req.data["uid"]
+            if uid == nil || uid == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "uid为空",
+                    "status":0
+                    ])
+            }
+            if bytes == nil || bytes == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "用户图像数据为空",
+                    "status":0
+                    ])
+            }
             return try JSON(node: [
                 "data":"",
                 "msg" : "头像更新成功",
