@@ -280,13 +280,21 @@ extension Droplet {
                 ])
         }
         //3.HTML
-        //3.1
+        //3.1 CMS
         get("cms"){ req in
             //创建Drop
             let config = try Config()
             try config.setup()
             let drop = try Droplet(config)
-            return try drop.view.make("index.leaf", ["greeting": "Hello World"])
+            return try drop.view.make("cms.leaf", ["greeting": "Hello World"])
+        }
+        //3.2 About
+        get("about"){ req in
+            //创建Drop
+            let config = try Config()
+            try config.setup()
+            let drop = try Droplet(config)
+            return try drop.view.make("about.leaf", ["greeting": "Hello World"])
         }
         //4.上传
         //4.1上传图片
@@ -307,6 +315,7 @@ extension Droplet {
                     "status":0
                     ])
             }
+            
             return try JSON(node: [
                 "data":"",
                 "msg" : "头像更新成功",
