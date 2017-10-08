@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/vapor/fluent.git",
         "state": {
           "branch": null,
-          "revision": "271ab0e0b9a81d0befc2673332715c3384f186bf",
-          "version": "2.4.0"
+          "revision": "9f94af35b177b5a5fdc40a81703e68c072c5013d",
+          "version": "2.4.1"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-provider.git",
         "state": {
           "branch": null,
-          "revision": "baaa6091c175382661d3a8a2b2ecb440986a37cb",
-          "version": "1.1.1"
+          "revision": "3bb67ad0be2df74367087e90391436b4336e7962",
+          "version": "1.2.0"
         }
       },
       {
@@ -195,8 +195,8 @@
         "repositoryURL": "https://github.com/vapor/sqlite.git",
         "state": {
           "branch": null,
-          "revision": "f110cbe9ff5283eca7d2edf1b8ee69dfb8b666d6",
-          "version": "2.2.0"
+          "revision": "9aceb6a0d7b1698a557647493bd78b030dad468b",
+          "version": "2.3.1"
         }
       },
       {
