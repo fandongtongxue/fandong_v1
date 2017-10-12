@@ -8,7 +8,7 @@ extension Droplet {
         try setupRoutes()
         // Do any additional droplet setup
         //Chat
-        get("/chat"){_ in
+        get("/welcome"){_ in
             try self.view.make("welcome.html")
         }
         
