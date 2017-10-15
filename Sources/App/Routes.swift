@@ -286,7 +286,7 @@ extension Droplet {
             let config = try Config()
             try config.setup()
             let drop = try Droplet(config)
-            return try drop.view.make("cms.leaf", ["greeting": "Hello World"])
+            return try drop.view.make("cms.html", ["greeting": "Hello World"])
         }
         //3.2 About
         get("about"){ req in
@@ -294,7 +294,7 @@ extension Droplet {
             let config = try Config()
             try config.setup()
             let drop = try Droplet(config)
-            return try drop.view.make("about.leaf", ["greeting": "Hello World"])
+            return try drop.view.make("about.html", ["greeting": "Hello World"])
         }
         //4.上传
         //4.1上传图片
