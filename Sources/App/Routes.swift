@@ -322,5 +322,26 @@ extension Droplet {
                 "status":1
                 ])
         }
+        //5.评论
+        //5.1评论电视台
+        post("comment"){req in
+            let uid = req.data["uid"]
+            let objectId = req.data["objectId"]
+            let type = req.data["type"]
+            if uid == nil || uid == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "uid为空",
+                    "status":0
+                    ])
+            }
+            if objectId == nil || objectId == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "objectId为空",
+                    "status":0
+                    ])
+            }
+        }
     }
 }
