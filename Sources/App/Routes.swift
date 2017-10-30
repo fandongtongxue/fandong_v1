@@ -323,11 +323,12 @@ extension Droplet {
                 ])
         }
         //5.评论
-        //5.1评论电视台
-        post("comment"){req in
+        //5.1评论
+        get("comment"){req in
             let uid = req.data["uid"]
             let objectId = req.data["objectId"]
             let type = req.data["type"]
+            let comment = req.data["comment"]
             if uid == nil || uid == ""{
                 return try JSON(node: [
                     "data":"",
@@ -342,6 +343,90 @@ extension Droplet {
                     "status":0
                     ])
             }
+            if type == nil || type == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "type为空",
+                    "status":0
+                    ])
+            }
+            if comment == nil || comment == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "comment为空",
+                    "status":0
+                    ])
+            }
+            let mysqlDriver = try self.mysql()
+            //用户写入数据库
+            let currentDate = Date.init(timeIntervalSinceNow: 0)
+            let currentDateString = currentDate.smtpFormatted
+            
+            let insertMysqlStr = "INSERT INTO app_channel_comment(id,uid,channelId,comment,createTime) VALUES(0,'" + (uid?.string)! + "','" +  (objectId?.string)! + "','" + (comment?.string)! + "','" + currentDateString + "');"
+            try mysqlDriver.raw(insertMysqlStr)
+            let excuteResult = try mysqlDriver.raw("select * from app_channel_comment where comment='" + (comment?.string)! + "';")
+            let userinfo = excuteResult[0]
+            if type?.string?.int == 0{
+                if userinfo != nil{
+                    return try JSON(node: [
+                        "data":"",
+                        "msg" : "评论成功",
+                        "status":1
+                        ])
+                }
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "评论失败",
+                    "status":0
+                    ])
+            }
+            return try JSON(node: [
+                "data":"",
+                "msg" : "操作失败",
+                "status":0
+                ])
+        }
+        //5.1评论列表
+        get("commentList"){ req in
+            let objectId = req.data["objectId"]
+            let type = req.data["type"]
+            if objectId == nil || objectId == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "objectId为空",
+                    "status":0
+                    ])
+            }
+            if type == nil || type == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "type为空",
+                    "status":0
+                    ])
+            }
+            //创建MySQL驱动
+            let mysqlDriver = try self.mysql()
+            if type?.string?.int == 0{
+                //查询是否已存在此用户
+                let result = try mysqlDriver.raw("select * from app_channel_comment where channelId='" + (objectId?.string)! + "';")
+                if result[0] != nil{
+                    return try JSON(node: [
+                        "data":["commentList":JSON(result)],
+                        "msg" : "获取评论列表成功",
+                        "status":1
+                        ])
+                }
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "获取评论列表失败",
+                    "status":0
+                    ])
+            }
+            return try JSON(node: [
+                "data":"",
+                "msg" : "操作失败",
+                "status":0
+                ])
         }
     }
 }
