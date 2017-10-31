@@ -324,7 +324,7 @@ extension Droplet {
         }
         //5.评论
         //5.1评论
-        get("comment"){req in
+        post("comment"){req in
             let uid = req.data["uid"]
             let objectId = req.data["objectId"]
             let type = req.data["type"]
