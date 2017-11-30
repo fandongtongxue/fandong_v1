@@ -299,7 +299,7 @@ extension Droplet {
         //4.上传
         //4.1上传图片
         post("userChangeUserIcon"){ req in
-            let bytes = req.body.bytes
+            let icon = req.data["icon"]
             let uid = req.data["uid"]
             if uid == nil || uid == ""{
                 return try JSON(node: [
@@ -308,14 +308,17 @@ extension Droplet {
                     "status":0
                     ])
             }
-            if bytes == nil{
+            if icon == nil{
                 return try JSON(node: [
                     "data":"",
-                    "msg" : "用户头像二进制数据为空",
+                    "msg" : "用户头像地址为空",
                     "status":0
                     ])
             }
-            
+            //创建MySQL驱动
+            let mysqlDriver = try self.mysql()
+            let updateMysqlStr = "UPDATE app_userInfo SET icon = '" + (icon?.string)! + "' WHERE uid = '" + (uid?.string)! + "';"
+            try mysqlDriver.raw(updateMysqlStr)
             return try JSON(node: [
                 "data":"",
                 "msg" : "头像更新成功",
