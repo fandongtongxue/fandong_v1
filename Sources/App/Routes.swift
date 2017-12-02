@@ -296,11 +296,14 @@ extension Droplet {
             let drop = try Droplet(config)
             return try drop.view.make("about.html", ["greeting": "Hello World"])
         }
-        //4.上传
-        //4.1上传图片
-        post("userChangeUserIcon"){ req in
-            let icon = req.data["icon"]
-            let uid = req.data["uid"]
+        //4.动态
+        //4.1发布动态
+        post("statusPublish"){ req in
+            //获取GET数据
+            let imgUrls = req.data["imgUrls"]
+            let content = req.data["content"]
+            let location = req.data["location"]
+            let uid = req.data["uid"];
             if uid == nil || uid == ""{
                 return try JSON(node: [
                     "data":"",
@@ -308,21 +311,55 @@ extension Droplet {
                     "status":0
                     ])
             }
-            if icon == nil{
+            if imgUrls == nil || imgUrls == ""{
                 return try JSON(node: [
                     "data":"",
-                    "msg" : "用户头像地址为空",
+                    "msg" : "imgUrls为空",
                     "status":0
                     ])
             }
+            if content == nil || content == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "content为空",
+                    "status":0
+                    ])
+            }
+            if location == nil || location == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "location为空",
+                    "status":0
+                    ])
+            }
+            //写入动态列表表
             //创建MySQL驱动
             let mysqlDriver = try self.mysql()
-            let updateMysqlStr = "UPDATE app_userInfo SET icon = '" + (icon?.string)! + "' WHERE uid = '" + (uid?.string)! + "';"
-            try mysqlDriver.raw(updateMysqlStr)
+            let insertMysqlUserInfoStr = "INSERT INTO app_statusList(uid,imgUrls,content,location,likeCount,commentCount,shareCount) VALUES('" + (uid?.string)! + "','" + (imgUrls?.string)! + "','"+(content?.string)! + "','" + (location?.string)! + "','0','0','0');"
+            try mysqlDriver.raw(insertMysqlUserInfoStr)
             return try JSON(node: [
                 "data":"",
-                "msg" : "头像更新成功",
+                "msg" : "动态发布成功",
                 "status":1
+                ])
+        }
+        //4.2动态列表
+        get("statusList"){ req in
+            //创建MySQL驱动
+            let mysqlDriver = try self.mysql()
+            //查询是否已存在此用户
+            let result = try mysqlDriver.raw("select * from app_statusList;")
+            if result[0] != nil{
+                return try JSON(node: [
+                    "data":["statusList":JSON(result)],
+                    "msg" : "获取动态列表成功",
+                    "status":1
+                    ])
+            }
+            return try JSON(node: [
+                "data":"",
+                "msg" : "获取动态列表失败",
+                "status":0
                 ])
         }
         //5.评论
