@@ -45,7 +45,7 @@ extension Droplet {
                 let userinfo = excuteResult[0]
                 if userinfo != nil{
                     //写入用户信息表
-                    let insertMysqlUserInfoStr = "INSERT INTO app_userInfo(uid,icon,nickName,introduce) VALUES(0,'" + (userinfo?.wrapped["uid"]?.string)!+"','"+USER_DEFAULT_ICON+"','"+(userName?.string)!+"','"+USER_DEFAULT_INTRODUCE+"');"
+                    let insertMysqlUserInfoStr = "INSERT INTO app_userInfo(uid,icon,nickName,introduce) VALUES('" + (userinfo?.wrapped["uid"]?.string)!+"','"+USER_DEFAULT_ICON+"','"+(userName?.string)!+"','"+USER_DEFAULT_INTRODUCE+"');"
                     try mysqlDriver.raw(insertMysqlUserInfoStr)
                     let checkUserInfoResult = try mysqlDriver.raw("select * from app_userInfo where uid='" + (userinfo?.wrapped["uid"]?.string)! + "';")
                     if checkUserInfoResult[0] != nil{
