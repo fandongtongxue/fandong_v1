@@ -311,13 +311,6 @@ extension Droplet {
                     "status":0
                     ])
             }
-            if imgUrls == nil || imgUrls == ""{
-                return try JSON(node: [
-                    "data":"",
-                    "msg" : "imgUrls为空",
-                    "status":0
-                    ])
-            }
             if content == nil || content == ""{
                 return try JSON(node: [
                     "data":"",
