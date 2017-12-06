@@ -338,10 +338,16 @@ extension Droplet {
         }
         //4.2动态列表
         get("statusList"){ req in
+            let uid = req.data["uid"]
             //创建MySQL驱动
             let mysqlDriver = try self.mysql()
-            //查询是否已存在此用户
-            let result = try mysqlDriver.raw("select * from app_statusList;")
+            var mysqlStr = ""
+            if uid == nil || uid == ""{
+                mysqlStr = "select * from app_statusList;"
+            }else{
+                mysqlStr = "select * from app_statusList Where uid = " + (uid?.string)! + ";"
+            }
+            let result = try mysqlDriver.raw(mysqlStr)
             if result[0] != nil{
                 return try JSON(node: [
                     "data":["statusList":JSON(result)],
@@ -440,7 +446,6 @@ extension Droplet {
             //创建MySQL驱动
             let mysqlDriver = try self.mysql()
             if type?.string?.int == 0{
-                //查询是否已存在此用户
                 let result = try mysqlDriver.raw("select * from app_channel_comment where channelId='" + (objectId?.string)! + "';")
                 if result[0] != nil{
                     return try JSON(node: [
