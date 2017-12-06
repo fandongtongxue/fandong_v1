@@ -363,7 +363,7 @@ extension Droplet {
         }
         //5.评论
         //5.1评论
-        post("comment"){req in
+        get("comment"){req in
             let uid = req.data["uid"]
             let objectId = req.data["objectId"]
             let type = req.data["type"]
@@ -401,27 +401,20 @@ extension Droplet {
             let currentDate = Date.init(timeIntervalSinceNow: 0)
             let currentDateString = currentDate.smtpFormatted
             
-            let insertMysqlStr = "INSERT INTO app_channel_comment(id,uid,channelId,comment,createTime) VALUES(0,'" + (uid?.string)! + "','" +  (objectId?.string)! + "','" + (comment?.string)! + "','" + currentDateString + "');"
+            let insertMysqlStr = "INSERT INTO app_commentList(uid,objectId,comment,createTime) VALUES('" + (uid?.string)! + "','" +  (objectId?.string)! + "','" + (comment?.string)! + "','" + currentDateString + "');"
             try mysqlDriver.raw(insertMysqlStr)
-            let excuteResult = try mysqlDriver.raw("select * from app_channel_comment where comment='" + (comment?.string)! + "';")
+            let excuteResult = try mysqlDriver.raw("select * from app_commentList where comment='" + (comment?.string)! + "';")
             let userinfo = excuteResult[0]
-            if type?.string?.int == 0{
-                if userinfo != nil{
-                    return try JSON(node: [
-                        "data":"",
-                        "msg" : "评论成功",
-                        "status":1
-                        ])
-                }
+            if userinfo != nil{
                 return try JSON(node: [
                     "data":"",
-                    "msg" : "评论失败",
-                    "status":0
+                    "msg" : "评论成功",
+                    "status":1
                     ])
             }
             return try JSON(node: [
                 "data":"",
-                "msg" : "操作失败",
+                "msg" : "评论失败",
                 "status":0
                 ])
         }
