@@ -7,8 +7,8 @@ let USER_DEFAULT_INTRODUCE = "Nothing to say"
 
 extension Droplet {
     func setupRoutes() throws {
-        //1.用户相关
-        //1.1注册用户
+        //MARK: 1.用户相关
+        //MARK: 1.1注册用户
         post("userRegister"){ req in
             //获取用户名和密码
             let userName = req.data["userName"]
@@ -63,7 +63,7 @@ extension Droplet {
                     ])
             }
         }
-        //1.2用户登录
+        //MARK: 1.2用户登录
         post("userLogin"){ req in
             //获取用户名和密码
             let userName = req.data["userName"]
@@ -124,7 +124,7 @@ extension Droplet {
                 "status":0
                 ])
         }
-        //1.3已知密码修改密码
+        //MARK: 1.3已知密码修改密码
         post("userChangePassWord"){ req in
             //获取GET数据
             let userName = req.data["userName"]
@@ -195,7 +195,7 @@ extension Droplet {
                 "status":0
                 ])
         }
-        //1.4获取用户信息
+        //MARK: 1.4获取用户信息
         get("userInfo"){ req in
             let uid = req.data["uid"]
             if uid == nil || uid == ""{
@@ -222,7 +222,7 @@ extension Droplet {
                 "status":0
                 ])
         }
-        //1.5更改用户信息昵称/简介/头像
+        //MARK: 1.5更改用户信息昵称/简介/头像
         post("userChangeUserInfo"){ req in
             //获取GET数据
             let nickName = req.data["nickName"]
@@ -267,8 +267,8 @@ extension Droplet {
                 "status":1
                 ])
         }
-        //2.电视台
-        //2.1电视台列表
+        //MARK: 2.电视台
+        //MARK: 2.1电视台列表
         get("channelList"){ req in
             //创建MySQL驱动
             let mysqlDriver = try self.mysql()
@@ -279,8 +279,8 @@ extension Droplet {
                 "status":1
                 ])
         }
-        //3.HTML
-        //3.1 CMS
+        //MARK: 3.HTML
+        //MARK: 3.1 CMS
         get("cms"){ req in
             //创建Drop
             let config = try Config()
@@ -288,7 +288,7 @@ extension Droplet {
             let drop = try Droplet(config)
             return try drop.view.make("cms.html", ["greeting": "Hello World"])
         }
-        //3.2 About
+        //MARK: 3.2 About
         get("about"){ req in
             //创建Drop
             let config = try Config()
@@ -296,8 +296,8 @@ extension Droplet {
             let drop = try Droplet(config)
             return try drop.view.make("about.html", ["greeting": "Hello World"])
         }
-        //4.动态
-        //4.1发布动态
+        //MARK: 4.动态
+        //MARK: 4.1发布动态
         post("statusPublish"){ req in
             //获取GET数据
             let imgUrls = req.data["imgUrls"]
@@ -336,16 +336,16 @@ extension Droplet {
                 "status":1
                 ])
         }
-        //4.2动态列表
+        //MARK: 4.2动态列表
         get("statusList"){ req in
             let uid = req.data["uid"]
             //创建MySQL驱动
             let mysqlDriver = try self.mysql()
             var mysqlStr = ""
             if uid == nil || uid == ""{
-                mysqlStr = "select * from app_statusList;"
+                mysqlStr = "select * from app_statusList order by id desc;"
             }else{
-                mysqlStr = "select * from app_statusList Where uid = " + (uid?.string)! + ";"
+                mysqlStr = "select * from app_statusList Where uid = " + (uid?.string)! + " order by id desc;"
             }
             let result = try mysqlDriver.raw(mysqlStr)
             if result[0] != nil{
@@ -361,9 +361,9 @@ extension Droplet {
                 "status":0
                 ])
         }
-        //5.评论
-        //5.1评论
-        get("comment"){req in
+        //MARK: 5.评论
+        //MARK: 5.1评论
+        post("comment"){req in
             let uid = req.data["uid"]
             let objectId = req.data["objectId"]
             let type = req.data["type"]
@@ -418,7 +418,7 @@ extension Droplet {
                 "status":0
                 ])
         }
-        //5.1评论列表
+        //MARK: 5.1评论列表
         get("commentList"){ req in
             let objectId = req.data["objectId"]
             let type = req.data["type"]
