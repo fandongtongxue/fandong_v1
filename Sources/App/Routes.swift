@@ -439,7 +439,7 @@ extension Droplet {
             //创建MySQL驱动
             let mysqlDriver = try self.mysql()
             if type?.string?.int == 0{
-                let result = try mysqlDriver.raw("select * from app_channel_comment where channelId='" + (objectId?.string)! + "';")
+                let result = try mysqlDriver.raw("select * from app_channel_comment where channelId='" + (objectId?.string)! + "' order by id desc;")
                 if result[0] != nil{
                     return try JSON(node: [
                         "data":["commentList":JSON(result)],
