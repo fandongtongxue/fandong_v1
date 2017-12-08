@@ -347,10 +347,20 @@ extension Droplet {
             }else{
                 mysqlStr = "select * from app_statusList Where uid = " + (uid?.string)! + " order by id desc;"
             }
-            let result = try mysqlDriver.raw(mysqlStr)
-            if result[0] != nil{
+            let statusResult = try mysqlDriver.raw(mysqlStr)
+            var index = 0
+            for status in statusResult.array!{
+                let statusObject = status.wrapped.object
+                let uid = statusObject!["uid"]
+                //TODO根据uid查询用户信息
+                let mysqlUserInfoSql = "select * from app_userInfo where uid='" + (uid?.string)! + "';"
+                let userInfoResult = try mysqlDriver.raw(mysqlUserInfoSql)
+                self.log.info(String.init(format: "%d", index))
+                index = index + 1
+            }
+            if statusResult[0] != nil{
                 return try JSON(node: [
-                    "data":["statusList":JSON(result)],
+                    "data":["statusList":JSON(statusResult)],
                     "msg" : "获取动态列表成功",
                     "status":1
                     ])
