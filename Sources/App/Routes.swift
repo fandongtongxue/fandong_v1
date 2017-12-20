@@ -467,13 +467,35 @@ extension Droplet {
                 "status":0
                 ])
         }
-        get("currentTime") { req in
+        post("currentTime") { req in
+            let uuid = req.data["uuid"]
+            if uuid == nil || uuid == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "uuid为空",
+                    "status":0
+                    ])
+            }
             let currentDate = Date.init(timeIntervalSinceNow: 0)
+            let expireDate = Date.init(timeIntervalSinceNow: 3600*24)
             let currentDateString = currentDate.smtpFormatted
+            let expireDateString = expireDate.smtpFormatted
+            let mysqlDriver = try self.mysql()
+            let insertMysqlStr = "INSERT INTO app_WingMan_expireDate(uuid,currentDate,expireDate) VALUES('" + (uuid?.string)! + "','" + currentDateString + "','" +  expireDateString + "');"
+            try mysqlDriver.raw(insertMysqlStr)
+            let excuteResult = try mysqlDriver.raw("select * from app_WingMan_expireDate where uuid='" + (uuid?.string)! + "';")
+            let userinfo = excuteResult[0]
+            if userinfo != nil{
+                return try JSON (node: [
+                    "data":["expireDate":expireDateString],
+                    "msg" : "获取到期时间成功",
+                    "status":1
+                    ])
+            }
             return try JSON (node: [
-                "data":["currentTime":currentDateString],
-                "msg" : "获取当前时间成功",
-                "status":1
+                "data":"",
+                "msg" : "获取到期时间失败",
+                "status":0
                 ])
         }
     }
