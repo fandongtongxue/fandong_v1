@@ -473,7 +473,7 @@ extension Droplet {
             return try JSON (node: [
                 "data":["currentTime":currentDateString],
                 "msg" : "获取当前时间成功",
-                "status":0
+                "status":1
                 ])
         }
     }
