@@ -481,9 +481,9 @@ extension Droplet {
             let currentDateString = currentDate.smtpFormatted
             let expireDateString = expireDate.smtpFormatted
             let mysqlDriver = try self.mysql()
-            let insertMysqlStr = "INSERT INTO app_WingMan_expireDate(uuid,currentDate,expireDate) VALUES('" + (uuid?.string)! + "','" + currentDateString + "','" +  expireDateString + "');"
+            let insertMysqlStr = "INSERT INTO app_WingMan_ExpireDate(uuid,currentDate,expireDate) VALUES('" + (uuid?.string)! + "','" + currentDateString + "','" +  expireDateString + "');"
             try mysqlDriver.raw(insertMysqlStr)
-            let excuteResult = try mysqlDriver.raw("select * from app_WingMan_expireDate where uuid='" + (uuid?.string)! + "';")
+            let excuteResult = try mysqlDriver.raw("select * from app_WingMan_ExpireDate where uuid='" + (uuid?.string)! + "';")
             let userinfo = excuteResult[0]
             if userinfo != nil{
                 return try JSON (node: [
