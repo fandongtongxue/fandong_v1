@@ -476,27 +476,39 @@ extension Droplet {
                     "status":0
                     ])
             }
-            let currentDate = Date.init(timeIntervalSinceNow: 0)
-            let expireDate = Date.init(timeIntervalSinceNow: 3600*24)
-            let currentDateString = currentDate.smtpFormatted
-            let expireDateString = expireDate.smtpFormatted
             let mysqlDriver = try self.mysql()
-            let insertMysqlStr = "INSERT INTO app_WingMan_ExpireDate(uuid,currentDate,expireDate) VALUES('" + (uuid?.string)! + "','" + currentDateString + "','" +  expireDateString + "');"
-            try mysqlDriver.raw(insertMysqlStr)
-            let excuteResult = try mysqlDriver.raw("select * from app_WingMan_ExpireDate where uuid='" + (uuid?.string)! + "';")
-            let userinfo = excuteResult[0]
-            if userinfo != nil{
+            let uuidResult = try mysqlDriver.raw("select * from app_WingMan_ExpireDate where uuid='" + (uuid?.string)! + "';")
+            let uuidInfo = uuidResult[0]
+            let currentDate = Date.init(timeIntervalSinceNow: 0)
+            let currentDateString = currentDate.smtpFormatted
+            if uuidInfo == nil{
+                let expireDate = Date.init(timeIntervalSinceNow: 3600*24)
+                let expireDateString = expireDate.smtpFormatted
+                
+                let insertMysqlStr = "INSERT INTO app_WingMan_ExpireDate(uuid,currentDate,expireDate) VALUES('" + (uuid?.string)! + "','" + currentDateString + "','" +  expireDateString + "');"
+                try mysqlDriver.raw(insertMysqlStr)
+                let excuteResult = try mysqlDriver.raw("select * from app_WingMan_ExpireDate where uuid='" + (uuid?.string)! + "';")
+                let userinfo = excuteResult[0]
+                if userinfo != nil{
+                    return try JSON (node: [
+                        "data":["expireDate":expireDateString,"currentDate":currentDateString],
+                        "msg" : "获取当前时间和到期时间成功",
+                        "status":1
+                        ])
+                }
                 return try JSON (node: [
-                    "data":["expireDate":expireDateString],
-                    "msg" : "获取到期时间成功",
+                    "data":"",
+                    "msg" : "获取当前时间和到期时间失败",
+                    "status":0
+                    ])
+            }else{
+                let uuidinfoObject = uuidInfo?.wrapped.object
+                return try JSON (node: [
+                    "data":["expireDate":uuidinfoObject!["expireDate"]!,"currentDate":currentDateString],
+                    "msg" : "获取当前时间和到期时间成功",
                     "status":1
                     ])
             }
-            return try JSON (node: [
-                "data":"",
-                "msg" : "获取到期时间失败",
-                "status":0
-                ])
         }
     }
 }
