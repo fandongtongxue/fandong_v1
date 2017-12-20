@@ -95,8 +95,8 @@ extension Droplet {
                 let getPassWordHash = try drop.hash.make((passWord?.string)!)
                 let getPassWordHashStr = getPassWordHash.makeString()
                 //MySQL中密码的哈希值
-                let resultNode = result[0] as! Node
-                let resultStructuredData = resultNode.wrapped as! StructuredData
+                let resultNode = result[0]!
+                let resultStructuredData = resultNode.wrapped
                 let mysqlPasswordStr = (resultStructuredData["passWord"]?.string)!
                 let mysqlPasswordHash = try drop.hash.make(mysqlPasswordStr)
                 let mysqlPasswordHashStr = mysqlPasswordHash.makeString()
@@ -582,4 +582,20 @@ extension Droplet {
                 ])
         }
     }
+//    //MARK:Extension
+//    func translateDateToString(originDate:Date) -> String {
+//        let formatter = DateFormatter.init()
+//        formatter.dateFormat = "yyyy-MM-dd-HH:mm:ss"
+//        formatter.locale = Locale(identifier: "zh-CN")
+//        let dateString = formatter.string(from: originDate)
+//        return dateString
+//    }
+//
+//    func translateStringToDate(originDate:String) ->Date {
+//        let formatter = DateFormatter.init()
+//        formatter.dateFormat = "EEE, d MMM yyyy HH:mm:ss ZZZ"
+//        formatter.locale = Locale(identifier: "en-US")
+//        let date = formatter.date(from: originDate)
+//        return date!
+//    }
 }
