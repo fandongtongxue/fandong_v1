@@ -348,15 +348,13 @@ extension Droplet {
                 mysqlStr = "select * from app_statusList Where uid = " + (uid?.string)! + " order by id desc;"
             }
             let statusResult = try mysqlDriver.raw(mysqlStr)
-            var index = 0
             for status in statusResult.array!{
                 let statusObject = status.wrapped.object
                 let uid = statusObject!["uid"]
                 //TODO根据uid查询用户信息
                 let mysqlUserInfoSql = "select * from app_userInfo where uid='" + (uid?.string)! + "';"
                 let userInfoResult = try mysqlDriver.raw(mysqlUserInfoSql)
-                self.log.info(String.init(format: "%d", index))
-                index = index + 1
+                self.log.info(userInfoResult.wrapped.description)
             }
             if statusResult[0] != nil{
                 return try JSON(node: [
@@ -466,6 +464,15 @@ extension Droplet {
             return try JSON(node: [
                 "data":"",
                 "msg" : "操作失败",
+                "status":0
+                ])
+        }
+        get("currentTime") { req in
+            let currentDate = Date.init(timeIntervalSinceNow: 0)
+            let currentDateString = currentDate.smtpFormatted
+            return try JSON (node: [
+                "data":["currentTime":currentDateString],
+                "msg" : "获取当前时间成功",
                 "status":0
                 ])
         }

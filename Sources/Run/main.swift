@@ -25,9 +25,3 @@ let drop = try Droplet(config)
 try drop.setup()
 
 try drop.run()
-
-//数据库密码
-//iMac
-//"password": "123456",
-//MacBook Pro
-//"password": "iOS339002469",
