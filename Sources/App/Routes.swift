@@ -4,7 +4,6 @@ import MySQLProvider
 let USER_DEFAULT_ICON = "http://ov2uvg3mg.bkt.clouddn.com/USER_DEFAULT_ICON.jpg"
 let USER_DEFAULT_INTRODUCE = "Nothing to say"
 
-
 extension Droplet {
     func setupRoutes() throws {
         //MARK: 1.用户相关
@@ -467,7 +466,8 @@ extension Droplet {
                 "status":0
                 ])
         }
-        post("currentTime") { req in
+        //MARK:
+        post("expireDate") { req in
             let uuid = req.data["uuid"]
             if uuid == nil || uuid == ""{
                 return try JSON(node: [
@@ -509,6 +509,77 @@ extension Droplet {
                     "status":1
                     ])
             }
+        }
+        //MARK: 更新到期时间
+        post("updateExpireDate") { req in
+            let uuid = req.data["uuid"]
+            let productId = req.data["productId"]
+            if uuid == nil || uuid == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "uuid为空",
+                    "status":0
+                    ])
+            }
+            if productId == nil || productId == ""{
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "productId为空",
+                    "status":0
+                    ])
+            }
+            
+            let productIdDict = ["WingMan001":"7",
+                                 "WingMan002":"30",
+                                 "WingMan003":"120",
+                                 "WingMan004":"365",
+                                 "WingMan005":"1800"]
+            let productIdResult = productIdDict[(productId?.string)!]
+            let productIdDay = productIdResult?.double
+            
+            let mysqlDriver = try self.mysql()
+            let excuteResult = try mysqlDriver.raw("select * from app_WingMan_ExpireDate where uuid='" + (uuid?.string)! + "';")
+            let uuidResult = excuteResult[0]
+            let uuidObject = uuidResult?.wrapped.object
+//            let oldCurrentDateString = uuidObject!["currentDate"]
+            let oldExpireDateString = uuidObject!["expireDate"]?.string
+            //解决如下错误
+            //Printing description of originDate:
+            //"Wed, 3 Jan 2018 15:40:03 +0800, currentDate = Wed, 20 Dec 2017 15:40:04 +0800"
+            let trueString = oldExpireDateString?.components(separatedBy: ", currentDate").first
+            
+            let oldExpireDate = AppTool.shared.translateStringToDate(originDate: trueString!)
+            
+            let currentDate = Date.init(timeIntervalSinceNow: 0)
+            var expireDate = Date()
+            
+            let compareResult = oldExpireDate.compare(currentDate)
+            if compareResult == .orderedDescending{
+                //老过期时间大于当前服务器时间,在这个基础上加购买的时间
+                let timeIntervalSinceOldDate = oldExpireDate.timeIntervalSinceNow
+                expireDate = Date.init(timeIntervalSinceNow: timeIntervalSinceOldDate + 3600*24*productIdDay!)
+            }else{
+                //老过期时间小于当前服务器时间,在当前时间上加购买的时间
+                expireDate = Date.init(timeIntervalSinceNow: 3600*24*productIdDay!)
+            }
+            
+            let currentDateString = currentDate.smtpFormatted
+            let expireDateString = expireDate.smtpFormatted
+            
+            if excuteResult[0] != nil{
+                let updateMysqlStr = "UPDATE app_WingMan_ExpireDate SET expireDate = '" + expireDateString + ", currentDate = " + currentDateString +  "' WHERE uuid = '" + (uuid?.string)! + "';"
+                _ = try mysqlDriver.raw(updateMysqlStr)
+                return try JSON(node: [
+                    "data":"",
+                    "msg" : "更新到期时间成功",
+                    "status":1
+                    ])
+            }
+            return try JSON(node: [
+                "data":"",
+                "msg" : "更新到期时间失败",
+                "status":0
+                ])
         }
     }
 }
