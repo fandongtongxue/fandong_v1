@@ -324,10 +324,16 @@ extension Droplet {
                     "status":0
                     ])
             }
-            //写入动态列表表
             //创建MySQL驱动
             let mysqlDriver = try self.mysql()
-            let insertMysqlUserInfoStr = "INSERT INTO app_statusList(uid,imgUrls,content,location,likeCount,commentCount,shareCount) VALUES('" + (uid?.string)! + "','" + (imgUrls?.string)! + "','"+(content?.string)! + "','" + (location?.string)! + "','0','0','0');"
+            let mysqlUserInfoSql = "select * from app_userInfo where uid='" + (uid?.string)! + "';"
+            let userInfoResult = try mysqlDriver.raw(mysqlUserInfoSql)
+            let userInfo = userInfoResult.array?.first
+            let userInfoObject = userInfo?.wrapped.object
+            let userIconString = userInfoObject!["icon"]?.string
+            
+            //写入动态列表表
+            let insertMysqlUserInfoStr = "INSERT INTO app_statusList(uid,imgUrls,content,location,likeCount,commentCount,shareCount,userIcon) VALUES('" + (uid?.string)! + "','" + (imgUrls?.string)! + "','"+(content?.string)! + "','" + (location?.string)! + "','0','0','0','" + userIconString! + "');"
             try mysqlDriver.raw(insertMysqlUserInfoStr)
             return try JSON(node: [
                 "data":"",
@@ -347,14 +353,6 @@ extension Droplet {
                 mysqlStr = "select * from app_statusList Where uid = " + (uid?.string)! + " order by id desc;"
             }
             let statusResult = try mysqlDriver.raw(mysqlStr)
-            for status in statusResult.array!{
-                let statusObject = status.wrapped.object
-                let uid = statusObject!["uid"]
-                //TODO根据uid查询用户信息
-                let mysqlUserInfoSql = "select * from app_userInfo where uid='" + (uid?.string)! + "';"
-                let userInfoResult = try mysqlDriver.raw(mysqlUserInfoSql)
-                self.log.info(userInfoResult.wrapped.description)
-            }
             if statusResult[0] != nil{
                 return try JSON(node: [
                     "data":["statusList":JSON(statusResult)],
@@ -466,7 +464,7 @@ extension Droplet {
                 "status":0
                 ])
         }
-        //MARK:
+        //MARK:获取当前到期时间
         post("expireDate") { req in
             let uuid = req.data["uuid"]
             if uuid == nil || uuid == ""{
