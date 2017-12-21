@@ -331,9 +331,9 @@ extension Droplet {
             let userInfo = userInfoResult.array?.first
             let userInfoObject = userInfo?.wrapped.object
             let userIconString = userInfoObject!["icon"]?.string
-            
+            let userNickNameString = userInfoObject!["nickName"]?.string
             //写入动态列表表
-            let insertMysqlUserInfoStr = "INSERT INTO app_statusList(uid,imgUrls,content,location,likeCount,commentCount,shareCount,userIcon) VALUES('" + (uid?.string)! + "','" + (imgUrls?.string)! + "','"+(content?.string)! + "','" + (location?.string)! + "','0','0','0','" + userIconString! + "');"
+            let insertMysqlUserInfoStr = "INSERT INTO app_statusList(uid,imgUrls,content,location,likeCount,commentCount,shareCount,userIcon,userNickName) VALUES('" + (uid?.string)! + "','" + (imgUrls?.string)! + "','"+(content?.string)! + "','" + (location?.string)! + "','0','0','0','" + userIconString! + "','" + userNickNameString! + "');"
             try mysqlDriver.raw(insertMysqlUserInfoStr)
             return try JSON(node: [
                 "data":"",
