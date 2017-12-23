@@ -464,7 +464,8 @@ extension Droplet {
                 "status":0
                 ])
         }
-        //MARK:获取当前到期时间
+        //6.VPN
+        //MARK:6.1获取当前到期时间
         post("expireDate") { req in
             let uuid = req.data["uuid"]
             if uuid == nil || uuid == ""{
@@ -508,7 +509,7 @@ extension Droplet {
                     ])
             }
         }
-        //MARK: 更新到期时间
+        //MARK: 6.2更新到期时间
         post("updateExpireDate") { req in
             let uuid = req.data["uuid"]
             let productId = req.data["productId"]
@@ -579,21 +580,23 @@ extension Droplet {
                 "status":0
                 ])
         }
+        get("videoList") { req in
+            //创建MySQL驱动
+            let mysqlDriver = try self.mysql()
+            //查询是否已存在此用户
+            let result = try mysqlDriver.raw("select * from app_fandongtongxue_VideoList;")
+            if (result.array?.count)! >= 0{
+                return try JSON(node: [
+                    "data":["videoList":JSON(result)],
+                    "msg" : "获取视频列表成功",
+                    "status":1
+                    ])
+            }
+            return try JSON(node: [
+                "data":"",
+                "msg" : "获取视频列表失败",
+                "status":0
+                ])
+        }
     }
-//    //MARK:Extension
-//    func translateDateToString(originDate:Date) -> String {
-//        let formatter = DateFormatter.init()
-//        formatter.dateFormat = "yyyy-MM-dd-HH:mm:ss"
-//        formatter.locale = Locale(identifier: "zh-CN")
-//        let dateString = formatter.string(from: originDate)
-//        return dateString
-//    }
-//
-//    func translateStringToDate(originDate:String) ->Date {
-//        let formatter = DateFormatter.init()
-//        formatter.dateFormat = "EEE, d MMM yyyy HH:mm:ss ZZZ"
-//        formatter.locale = Locale(identifier: "en-US")
-//        let date = formatter.date(from: originDate)
-//        return date!
-//    }
 }
