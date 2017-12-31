@@ -580,6 +580,26 @@ extension Droplet {
                 "status":0
                 ])
         }
+        //MARK: 6.3获取WingMan商品列表
+        get("productList") { req in
+            //创建MySQL驱动
+            let mysqlDriver = try self.mysql()
+            //查询是否已存在此用户
+            let result = try mysqlDriver.raw("select * from app_WingMan_Product;")
+            if (result.array?.count)! >= 0{
+                return try JSON(node: [
+                    "data":["productList":JSON(result)],
+                    "msg" : "获取商品列表成功",
+                    "status":1
+                    ])
+            }
+            return try JSON(node: [
+                "data":"",
+                "msg" : "获取商品列表失败",
+                "status":0
+                ])
+        }
+        //MARK: 7.1获取范东同学视频列表
         get("videoList") { req in
             //创建MySQL驱动
             let mysqlDriver = try self.mysql()
