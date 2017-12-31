@@ -528,11 +528,11 @@ extension Droplet {
                     ])
             }
             
-            let productIdDict = ["me.fandong.WingMan.OneWeek":"7",
-                                 "me.fandong.WingMan.OneMonth":"30",
-                                 "me.fandong.WingMan.OneQuarter":"120",
-                                 "me.fandong.WingMan.OneYear":"365",
-                                 "me.fandong.WingMan.ThreeYear":"1095"]
+            let productIdDict = ["me.fandong.WingMan.001":"7",
+                                 "me.fandong.WingMan.002":"30",
+                                 "me.fandong.WingMan.003":"120",
+                                 "me.fandong.WingMan.004":"365",
+                                 "me.fandong.WingMan.005":"1095"]
             let productIdResult = productIdDict[(productId?.string)!]
             let productIdDay = productIdResult?.double
             
